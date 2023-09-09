@@ -11,7 +11,7 @@ from states import init_session_state, set_openai_keys
 
 
 st.set_page_config(page_title="Agent Company", page_icon="💬", layout="wide")
-st.title("Agent Company")
+st.header("Agent Company")
 
 
 init_session_state()
@@ -156,7 +156,7 @@ with st.expander("👩‍💼Employee"):
         )
         
 
-st.title("Chats")
+st.header("Chats")
     
 
 def main():
