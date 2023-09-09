@@ -133,7 +133,7 @@ with st.expander("🗣️Translator"):
 with st.expander("👩‍💼Employee"):
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader('Web Copilot', divider="rainbow")
+        st.subheader('👩‍✈️Web Copilot', divider="rainbow")
         update('Web Copilot', 'ck_web')
         st.markdown(
             """
@@ -144,7 +144,7 @@ with st.expander("👩‍💼Employee"):
             """
         )
     with col2:
-        st.subheader('Code Copilot', divider="rainbow")
+        st.subheader('👩‍💻Code Copilot', divider="rainbow")
         update('Code Copilot', 'ck_code')
         st.markdown(
             """
