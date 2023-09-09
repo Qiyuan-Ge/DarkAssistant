@@ -89,8 +89,8 @@ models on huggingface:
 ## How to use
 ### 1. Installation
 ````
-git clone https://github.com/Qiyuan-Ge/OpenAssistant.git
-cd OpenAssistant
+git clone https://github.com/Qiyuan-Ge/DarkAssistant.git
+cd DarkAssistant
 pip install -r requirements.txt
 ````
 ### 2. Starting the server
