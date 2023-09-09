@@ -11,7 +11,7 @@ from states import init_session_state, set_openai_keys
 
 
 st.set_page_config(page_title="Agent Company", page_icon="💬", layout="wide")
-st.header("Agent Company")
+st.header("Agent")
 
 
 init_session_state()
