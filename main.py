@@ -10,7 +10,7 @@ from assistant import load_tools, load_agents, create_root
 from states import init_session_state, set_openai_keys
 
 
-st.set_page_config(page_title="Agent Company", page_icon="💬", layout="wide")
+st.set_page_config(page_title="Chat", page_icon="💬", layout="wide")
 st.header("Agent")
 
 
