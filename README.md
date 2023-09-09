@@ -1,4 +1,4 @@
-# OpenAssistant
+# DarkAssistant
 <div align=center>
 <img src="https://github.com/Qiyuan-Ge/PaintMind/blob/main/assets/A_beautiful_girl_celebrating_her_birthday.png?raw=true" width="384">
 </div>
@@ -8,6 +8,8 @@
   <img src="https://img.shields.io/badge/Contact-542801615@qq.com-green?style=flat&logo=appveyor" alt="Badge 2">
 </div>
 
+## Quick Experience 
+[App](https://darkassistant.streamlit.app/)<br>
 
 ## Features
 Let's ask the assistant first🤔:
@@ -25,7 +27,7 @@ Effortlessly transform your Language Model (LLM) into an Agent.
 
 Explore and evaluate the capabilities of your Language Model through the integrated testing tool. 
 
-#### 3. Open Assistant WebUI
+#### 3. Dark Assistant WebUI
 
 Experience the convenience of the Open Assistant Web User Interface (WebUI). 
 
@@ -40,9 +42,6 @@ Experience the convenience of the Open Assistant Web User Interface (WebUI).
 | ![Image 1](https://github.com/Qiyuan-Ge/OpenAssistant/blob/main/assets/display0.png) | ![Image 2](https://github.com/Qiyuan-Ge/OpenAssistant/blob/main/assets/display1.png) |
 | --- | --- |
 | ![Image 3](https://github.com/Qiyuan-Ge/OpenAssistant/blob/main/assets/display2.png) | ![Image 4](https://github.com/Qiyuan-Ge/OpenAssistant/blob/main/assets/display3.png) |
-
-## Quick Experience 
-[streamlit app](https://openassistant.streamlit.app/)<br>
 
 ## Support models
 models on huggingface:
