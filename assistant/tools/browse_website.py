@@ -57,4 +57,4 @@ class BrowseWebsiteWithQuestion:
                 
             return result["result"]
         except Exception as e:
-            return e
+            return print(f"Error: {e}")

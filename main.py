@@ -1,58 +1,17 @@
 import io
-import os
-import openai
 import requests
 import streamlit as st
 from openai.error import AuthenticationError
 from langchain.callbacks import StreamlitCallbackHandler
 
-from open_assistant import load_tools, load_agent
-from open_assistant.cases import CASES
-from open_assistant.watsen import SimCaseSearch, ConversationMimic
+from assistant.watsen import ConversationMimic
+from assistant import load_tools, load_agents, create_root
+
+from states import init_session_state, set_openai_keys
 
 
-st.set_page_config(page_title="My Assistant", page_icon="💬")
-st.title("My Assistant")
-
-
-def init_session_state():
-    if "server_api_key" not in st.session_state:
-        st.session_state.server_api_key = "EMPTY"
-    if "server_api_base" not in st.session_state:
-        st.session_state.server_api_base = "http://region-31.seetacloud.com:59252/v1" #"https://api.openai.com/v1"    
-    if "generate_params" not in st.session_state:
-        st.session_state.generate_params = {'max_tokens':1024, 'temperature':0.9, 'top_p':0.6}
-    if "tool_names" not in st.session_state:
-        st.session_state.tool_names = ["Wikipedia", "Browse Website", "Current Weather", "Code Agent"]
-    if "chat_model_name" not in st.session_state:
-        st.session_state.chat_model_name = "gpt-3.5-turbo"
-    if "code_model_name" not in st.session_state:
-        st.session_state.code_model_name = "code-llama"
-    if "completion_model_name" not in st.session_state:
-        st.session_state.completion_model_name = "text-davinci-003"
-    if "embedding_model_name" not in st.session_state:
-        st.session_state.embedding_model_name = "text-embedding-ada-002"
-    if "prompt_template" not in st.session_state:
-        st.session_state.prompt_template = "vicuna_v1.1"
-    if "system_message" not in st.session_state:
-        st.session_state.system_message = "You are Vic, an AI assistant that follows instruction extremely well. Help as much as you can."
-    if "translation" not in st.session_state:
-        st.session_state.translation = ""
-    if "translation_lang" not in st.session_state:
-        st.session_state.translation_lang = "中文"
-    if "wiki_lang" not in st.session_state:
-        st.session_state.wiki_lang = "en"
-    if "env_key_data" not in st.session_state:
-        st.session_state.env_key_data = {"OPENWEATHERMAP_API_KEY": "0b4591ad2028813c97dedeffa0d08c9c"}
-        for env_name, key in st.session_state.env_key_data.items():
-            os.environ[env_name] = key
-    
-        
-def set_openai_keys(api_key, api_base):
-    os.environ['OPENAI_API_KEY'] = api_key
-    os.environ['OPENAI_API_BASE'] = api_base
-    openai.api_key = api_key
-    openai.api_base = api_base
+st.set_page_config(page_title="Agent Company", page_icon="💬", layout="wide")
+st.title("Agent Company")
 
 
 init_session_state()
@@ -81,11 +40,30 @@ with st.sidebar:
         "#### 3.Custom instructions\n"
         "#### 4.Chat with your assistant!\n"
     )
+        
+
+def check_state(name):
+    if name in st.session_state.agent_names:
+        return True
+    else:
+        return False
+    
+
+def add_agent(name):
+    if name not in st.session_state.agent_names:
+        st.session_state.agent_names.append(name)
 
 
-@st.cache_resource
-def init_sim_case_search(case, model_name):
-    return SimCaseSearch(data=case, model_name=model_name)
+def remove_agent(name):
+    if name in st.session_state.agent_names:
+        st.session_state.agent_names.remove(name)
+    
+
+def update(name, obj_key):
+    if st.toggle('Turn on/off', value=check_state(name), key=obj_key, label_visibility='hidden'):
+        add_agent(name)
+    else:
+        remove_agent(name)
     
 
 def go_back():
@@ -134,38 +112,65 @@ def read_image(image_path):
 
 
 def translating(params):
-    translator, _ = load_tools(tool_names=['Translator'], model_name=st.session_state.chat_model_name)[0]
+    translator = load_tools(tool_names=['Translator'], chat_model_name=st.session_state.chat_model_name)[0]
     st.session_state.translation = translator(params)
+
+
+with st.expander("🗣️Translator"):
+    col1, col2, col3 = st.columns([6, 1, 1])
+    with col1:
+        text = st.text_input(label="Text", key='text', label_visibility="collapsed", placeholder="Text put here...", max_chars=1024)
+    with col2:
+        lang = st.text_input(label="Language", key='lang', value=st.session_state.translation_lang, max_chars=20, label_visibility="collapsed")
+        st.session_state.translation_lang = lang
+    with col3:
+        with st.spinner('Translating...'):
+            trans_params = {'text':text, 'language':lang}
+            st.button("Trans", key='b_trans', on_click=translating, kwargs={'params':trans_params})
+    st.write(st.session_state.translation)
+
+     
+with st.expander("👩‍💼Employee"):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader('Web Copilot', divider="rainbow")
+        update('Web Copilot', 'ck_web')
+        st.markdown(
+            """
+            **Skills:**
+            - Google Search
+            - Wikipedia
+            - Browse Website
+            """
+        )
+    with col2:
+        st.subheader('Code Copilot', divider="rainbow")
+        update('Code Copilot', 'ck_code')
+        st.markdown(
+            """
+            **Skills:**
+            - LLM Code
+            - Google Search
+            - Browse Website
+            """
+        )
+        
+
+st.title("Chats")
     
 
 def main():
     template_name = st.session_state.prompt_template
-    system_message = st.session_state.system_message
-    
-    chat_model_name = st.session_state.chat_model_name
-    code_model_name = st.session_state.code_model_name
-    embedding_model_name = st.session_state.embedding_model_name
-    completion_model_name = st.session_state.completion_model_name
-    
-    tool_names = st.session_state.tool_names
-    tools, inside_tool_names = load_tools(
-        tool_names=tool_names, 
-        chat_model_name=chat_model_name,
-        code_model_name=code_model_name,
-        embedding_model_name=embedding_model_name,
-        wiki_lang=st.session_state.wiki_lang,
-    )
-
+    agent_profile = st.session_state.system_message
     generate_params = st.session_state.generate_params
-    agent = load_agent(model_name=completion_model_name, tools=tools, generate_params=generate_params)
-    
-    sim_case_search = init_sim_case_search(CASES, model_name=embedding_model_name)
-    conversation_mimic = ConversationMimic(model_name=chat_model_name)
+    chat_model_name = st.session_state.chat_model_name
 
     avatar_user = None
     avatar_assistant = None
-    messages = init_messages(avatar_user=avatar_user, avatar_assistant=avatar_assistant)
-
+    
+    messages = init_messages(avatar_user=None, avatar_assistant=None)
+    conversation_mimic = ConversationMimic(model_name=chat_model_name)
+    
     if prompt := st.chat_input("Shift + Enter 换行, Enter 发送"):
         with st.chat_message("user", avatar=avatar_user):
             st.markdown(prompt)
@@ -176,7 +181,7 @@ def main():
             example1 = "What can you do for me?"
             st.button(f"{example1}", key='b_e1', on_click=click_add_message, kwargs={'message':example1})
             
-            example2 = "What's the weather like in Hongkong?"
+            example2 = "The information of Elon Musk."
             st.button(f"{example2}", key='b_e2', on_click=click_add_message, kwargs={'message':example2})
             
             example3 = "A summary of this web page: https://github.com/Qiyuan-Ge/OpenAssistant"
@@ -188,14 +193,28 @@ def main():
     if prompt:
         with st.chat_message("assistant", avatar=avatar_assistant):
             placeholder = st.empty()
-            st_callback = StreamlitCallbackHandler(st.container())
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                container_1 = st.container()
+            with col2:
+                container_2 = st.container()
+
+            agent_list = load_agents(
+                agent_names=st.session_state.agent_names, 
+                callbacks=[StreamlitCallbackHandler(container_2)],
+            )
+
+            root = create_root(
+                tools=agent_list, 
+                generate_params=generate_params,
+            )
+            
             try:
-                one_shot = sim_case_search(prompt, available_tools=inside_tool_names)
-                with st.spinner('I am thinking🤔...'):
-                    response = agent.run(
-                        {'user': prompt, 'history': messages[:-1], 'example': one_shot, 'system_message': system_message , 'conv_template_name': template_name}, 
-                        callbacks=[st_callback]
-                    )
+                response = root.run(
+                    {'user': prompt, 'history': messages[:-1], 'agent_profile': agent_profile, 'template_name': template_name}, 
+                    callbacks=[StreamlitCallbackHandler(container_1)]
+                )
                 placeholder.markdown(response)
             except AuthenticationError:
                 response = "Something wrong happened. The system is taking over the AI assistant"
@@ -210,8 +229,8 @@ def main():
                 st.stop()
         placeholder.markdown(response)
         messages.append({"role": "assistant", "content": response})
-        print(messages)
-        with st.spinner('You might ask...'):
+
+        with st.spinner('You might want to know...'):
             try:
                 predictions = conversation_mimic(messages)
             except Exception as e:
@@ -233,20 +252,6 @@ def main():
             trans_params = {'text':messages[-1]['content'], 'language':st.session_state.translation_lang}
             with st.spinner('Translating...'):
                 st.button("translate(翻译)", key='b6', on_click=translating, kwargs={'params':trans_params})
-        
-    with st.container():
-        with st.expander("Translator"):
-            col1, col2, col3 = st.columns([6, 1, 1])
-            with col1:
-                text = st.text_input(label="Text", key='text', label_visibility="collapsed", placeholder="Text put here...", max_chars=1024)
-            with col2:
-                lang = st.text_input(label="Language", key='lang', value=st.session_state.translation_lang, max_chars=20, label_visibility="collapsed")
-                st.session_state.translation_lang = lang
-            with col3:
-                with st.spinner('Translating...'):
-                    trans_params = {'text':text, 'language':lang}
-                    st.button("Trans", key='b_trans', on_click=translating, kwargs={'params':trans_params})
-            st.write(st.session_state.translation)
 
         
 if __name__ == "__main__":

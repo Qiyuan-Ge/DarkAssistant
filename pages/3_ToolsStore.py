@@ -46,9 +46,9 @@ def convert_json(data_dict):
     return json.dumps(data_dict, indent=4)
     
     
-st.set_page_config(page_title="Tool store", page_icon="🏪")
+st.set_page_config(page_title="Tool store", page_icon="🏪", layout="wide")
 
-st.title("Tool store🏪")
+st.title("Tools store🏪")
 
 
 with st.container():
@@ -84,8 +84,9 @@ with st.container():
 
 st.divider()
 
-with st.container():
-    st.subheader('Google Search🔍')
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader('Google Search🔍', divider="rainbow")
     update("Google Search", "ck_google")
     st.markdown(
         """
@@ -95,11 +96,8 @@ with st.container():
         """
     )
     update_key("SERPER_API_KEY", "api_key_1")
-
-st.divider()
-
-with st.container():
-    st.subheader('Wikipedia📖')
+with col2:
+    st.subheader('Wikipedia📖', divider="rainbow")
     update("Wikipedia", "ck_wikipedia")
     st.markdown(
         """
@@ -113,8 +111,9 @@ with st.container():
 
 st.divider()
 
-with st.container():
-    st.subheader('Current Weather🌦️') 
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader('Current Weather🌦️', divider="rainbow") 
     update("Current Weather", "ck_weather")
     st.markdown(
         """
@@ -124,11 +123,8 @@ with st.container():
         """
     )
     update_key("OPENWEATHERMAP_API_KEY", "api_key_2")
-
-st.divider()
-
-with st.container():
-    st.subheader('Browse Website📱')
+with col2:
+    st.subheader('Browse Website📱', divider="rainbow")
     update("Browse Website", "ck_websites")
     st.markdown(
         """
@@ -138,9 +134,18 @@ with st.container():
 
 st.divider()
 
-with st.container():
-    st.subheader('Calculator➗') 
-    update("Calculator", "ck_calculator")
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader('LLM Code⌨️', divider="rainbow") 
+    update("LLM Code", "ck_code")
+    st.markdown(
+        """
+        A Large Language Model for more proficient in coding.
+        """
+    )
+with col2:
+    st.subheader('LLM Math➗', divider="rainbow") 
+    update("LLM Math", "ck_math")
     st.markdown(
         """
         Language model that interprets a prompt and executes python code to do math.
@@ -149,22 +154,13 @@ with st.container():
 
 st.divider()
 
-with st.container():
-    st.subheader('Translator🗣️') 
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader('Translator🗣️', divider="rainbow") 
     update("Translator", "ck_translator")
     st.markdown(
         """
         Translate text to another language.
-        """
-    )
-
-st.divider()
-
-with st.container():
-    st.subheader('Code Agent⌨️') 
-    update("Code Agent", "ck_code")
-    st.markdown(
-        """
-        Code Agent
         """
     )

@@ -18,7 +18,7 @@ def get_prompt(message: str, chat_history: list[tuple[str, str]], system_prompt:
     return ''.join(texts)
 
 
-class CodeAgent:
+class LLMCode:
     def __init__(self, model_name="code-llama"):
         self.client = openai.Completion
         self.model_name = model_name
