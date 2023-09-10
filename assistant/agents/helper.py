@@ -48,7 +48,7 @@ def get_thoughts_from_intermediate_steps(intermediate_steps, save_to_file=True):
     thoughts = ""
     for action, observation in intermediate_steps:
         thoughts += action.log
-        thoughts += f"\nObservation: {observation}"
+        thoughts += f"\nObservation: {observation}\n"
     if save_to_file:
         try:
             title, source = extract_title_and_source(action.log)
