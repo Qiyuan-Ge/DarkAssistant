@@ -181,7 +181,7 @@ def main():
             example1 = "What can you do for me?"
             st.button(f"{example1}", key='b_e1', on_click=click_add_message, kwargs={'message':example1})
             
-            example2 = "The information of Elon Musk."
+            example2 = "The information of OpenAI."
             st.button(f"{example2}", key='b_e2', on_click=click_add_message, kwargs={'message':example2})
             
             example3 = "A summary of this web page: https://github.com/Qiyuan-Ge/OpenAssistant"
