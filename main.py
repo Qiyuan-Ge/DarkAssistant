@@ -229,7 +229,7 @@ def main():
                 st.stop()
         placeholder.markdown(response)
         messages.append({"role": "assistant", "content": response})
-
+        print(messages)
         with st.spinner('You might want to know...'):
             try:
                 predictions = conversation_mimic(messages)
