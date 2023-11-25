@@ -7,12 +7,13 @@ from .code_copilot import CodeExpert
 from ..tools import load_tools, finish_tool
 
 
-def load_agents(agent_names: List[str], callbacks=None):
+def load_agents(agent_names: List[str], callbacks=None, template_name="openchat_3.5"):
     agent_list = []
     for agent_name in agent_names:
         if agent_name == "Web Copilot":
             agent_func = WebCopilot(
                 tools=load_tools(["Google Search", "Browse Website", "Wikipedia"]),
+                template_name=template_name,
                 callbacks=callbacks,
             )
             agent = Tool(
@@ -24,6 +25,7 @@ def load_agents(agent_names: List[str], callbacks=None):
         elif agent_name == "Code Copilot":
             agent_func = CodeExpert(
                 tools=load_tools(["LLM Code", "Google Search", "Browse Website"]),
+                template_name=template_name,
                 callbacks=callbacks,
             )
             agent = Tool(
