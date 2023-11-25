@@ -1,5 +1,7 @@
 from typing import List
 from langchain.agents import Tool
+
+from assistant.tools.shell import ShellAgent
 from .web_copilot import WebCopilot
 from .code_copilot import CodeExpert
 from ..tools import load_tools, finish_tool
@@ -28,6 +30,14 @@ def load_agents(agent_names: List[str], callbacks=None):
                 name="Code Copilot",
                 func=agent_func.run,
                 description='a coding assistant help you address coding issues, args: <coding issue>',
+            )
+            agent_list.append(agent)
+        elif agent_name == "Shell Copilot":
+            agent_func = ShellAgent()
+            agent = Tool(
+                name="Shell Copilot",
+                func=agent_func.run,
+                description='a shell assistant help you address shell task, args: <task issue>',
             )
             agent_list.append(agent)
     
