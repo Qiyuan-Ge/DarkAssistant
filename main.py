@@ -203,6 +203,7 @@ def main():
             agent_list = load_agents(
                 agent_names=st.session_state.agent_names, 
                 callbacks=[StreamlitCallbackHandler(container_2)],
+                template_name=template_name,
             )
 
             root = create_root(
