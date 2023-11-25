@@ -14,13 +14,13 @@ def init_session_state():
     if "server_api_key" not in st.session_state:
         st.session_state.server_api_key = "EMPTY"
     if "server_api_base" not in st.session_state:
-        st.session_state.server_api_base = "https://u31193-8cae-61e29a43.neimeng.seetacloud.com:6443/v1" #"https://api.openai.com/v1"    
+        st.session_state.server_api_base = "https://u31193-9a50-96959e64.neimeng.seetacloud.com:6443/v1" #"https://api.openai.com/v1"    
     if "generate_params" not in st.session_state:
         st.session_state.generate_params = {'max_tokens':1024, 'temperature':0.9, 'top_p':0.6}
     if "tool_names" not in st.session_state:
         st.session_state.tool_names = ["Wikipedia", "Browse Website", "LLM Code"]
     if "agent_names" not in st.session_state:
-        st.session_state.agent_names = ["Web Copilot", "Code Copilot"]
+        st.session_state.agent_names = ["Web Copilot", "Code Copilot", "Shell Copilot"]
     if "chat_model_name" not in st.session_state:
         st.session_state.chat_model_name = "gpt-3.5-turbo"
     if "code_model_name" not in st.session_state:
@@ -30,7 +30,7 @@ def init_session_state():
     if "embedding_model_name" not in st.session_state:
         st.session_state.embedding_model_name = "text-embedding-ada-002"
     if "prompt_template" not in st.session_state:
-        st.session_state.prompt_template = "vicuna_v1.1"
+        st.session_state.prompt_template = "openchat_3.5"
     if "system_message" not in st.session_state:
         st.session_state.system_message = "You are Vic, an AI assistant that follows instruction extremely well. Help as much as you can."
     if "translation" not in st.session_state:
